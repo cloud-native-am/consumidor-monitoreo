@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  consumidor-monitoreo:
+    build: .
+    container_name: consumidor-monitoreo
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      # Sobreescribe el WALLET_PATH del .env (que apunta a ruta local Windows)
+      WALLET_PATH: /app/wallet
+      # Kafka - apunta a los brokers internos de la red Docker
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:9092,kafka-2:9092,kafka-3:9092
+    networks:
+      - kafka-net
+    restart: unless-stopped
+
+networks:
+  kafka-net:
+    external: true
